@@ -2,65 +2,19 @@ import React, { Component } from 'react';
 //import "semantic-ui-css/semantic.min.css"; //{ Input, List} from
 import './App.css';
 import { TextField, List, ListItem, ListItemText } from "@material-ui/core"
-// import WeatherContainer from './WeatherContainer';
-// import Login from './Login';
-// import Navi from './Navbar/Navbar';
-// import { Route, Switch } from 'react-router-dom';
-// import Profile from './Profile';
-//import firebase from 'firebase';
-import firebase from 'firebase/app';
-import 'firebase/database';
-import * as firebase from 'firebase';
-const database = firebase.database();
+import database from './firebase/firebase';
+import Pusher from 'pusher-js';
+const admin = require('firebase-admin');
 
+//import * as admin from 'firebase-admin';
+ // Get refresh token from OAuth2 flow
 
-// // Dark sky API key: 54027aaa136404819ab799aaa96235ce
-// // Google API key: AIzaSyBHLett8djBo62dDXj0EjCimF8Rd6E8cxg
-// class App extends Component {
-//   constructor(){
-//     super();
-//     this.state = {
-//       username: [],
-//       password: "",
-//       location: Number,
-//       loggedIn: false,
-//       id: "",
-//     }
-//   }
-//   handleInputs = (e) => {
-//     this.setState({
-//       [e.currentTarget.name]: e.currentTarget.value
-//     })
-//   }
+const serviceAccount = require('./chatapp-b9baf-firebase-adminsdk-g1ehd-8d46d5e083.json');
 
-//   submitRegistration = async (e) => {
-//     e.preventDefault();
-//     console.log("GOT HERE")
-//     console.log(this.state);
-//     try{
-//       console.log("GOT HERE, TOO")
-//       const createUser = await fetch('http://localhost:8080/register', {
-//         method: 'POST',
-//         body: JSON.stringify(this.state),
-//         headers: {
-//           'Content-Type': 'application/json'
-//         } 
-//       });
-//       const parsedResponse = await createUser.json();
-//       console.log(parsedResponse, ' this is response')
-//         this.setState({
-//           loggedIn: true,
-//           // this isn't a real login - need to align it with the back-end to sort that out
-//           username: parsedResponse.username,
-//           location: parsedResponse.location,
-//           id: parsedResponse.id
-//         })
-//     }catch(err){
-//       console.log(err, " error")
-//     }
-//   }
-// }
-
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://chatapp.firebaseio.com'
+});
 
 
 class App extends React.Component {
@@ -72,25 +26,24 @@ class App extends React.Component {
       text: "",
       messages: []
   }
+  
     }
     componentDidMount=()=>{
-        // database.ref().set({
-        //     users: this.state.users
-        // })
-        // .then(()=console.log("first success"))
-        // .catch(err => console.log('FB error', err))
-        const config = {
-            apiKey: "AIzaSyA-qIK6dsZFzEKwQF7jU-mJCkF9BL0AuZM",
-            authDomain: "chatapp-b9baf.firebaseapp.com",
-            databaseURL: "https://chatapp-b9baf.firebaseio.com",
-            projectId: "chatapp-b9baf",
-            storageBucket: "chatapp-b9baf.appspot.com",
-            messagingSenderId: "987363613178"
+        const pusher = new Pusher('17b1eaedd74f0e3d83c7', {
+          cluster: 'us2',
+          encrypted: true,
+        });
+  
+        const channel = pusher.subscribe('bot');
+        channel.bind('bot-response', data => {
+          const msg = {
+            text: data.message,
+            user: 'ai',
           };
-          firebase.initializeApp(config);
-        
-          //const database = firebase.database();  //assigns return value to database const
-        
+          this.setState({
+            conversation: [...this.state.message, msg],
+          });
+        });
         this.getMessages()
         }
 
@@ -102,8 +55,7 @@ class App extends React.Component {
       }
   }
   writeMessageToDB = (message) =>{
-    firebase
-    .database()
+    database
     .ref("messages/")
     .push({
         text: message
@@ -111,8 +63,7 @@ class App extends React.Component {
 }
 
   getMessages=()=>{
-      let messageDB = firebase
-      .database
+      let messageDB = database
       .ref("messages/")
       .limitToLast(500)
       messageDB.on("value", snapshot =>{
@@ -128,7 +79,7 @@ class App extends React.Component {
 
     renderMessages = () => {
         return this.state.messages.map(message => (
-          <ListItem>
+          <ListItem key={message.id}>
             <ListItemText
               style={{ wordBreak: "break-word" }}
               primary={message.text}
@@ -143,12 +94,17 @@ class App extends React.Component {
           {/* <UserList />
           <ChatHistory />
           <SendMessage /> */}
+          <h1>Welcome to Skynet Chatbot</h1>
+            <div class="chat-window">
+              {/* <div class="conversation-view">{message.text}</div> */}
+              <div class="message-box">
           <List>
                   {this.renderMessages()}
           </List>
+    
           <TextField 
           autoFocus={true}
-          multiLine={true}
+          multiline={true}
           fullWidth={true}
           rowsMax={3}
           placeholder="Type something"
@@ -159,7 +115,8 @@ class App extends React.Component {
           />
           <span ref={el => (this.bottomSpan = el)} />
 
-          
+          </div>
+       </div>
        </div>
       )
     }

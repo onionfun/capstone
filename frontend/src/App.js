@@ -1,3 +1,5 @@
+//npm start
+
 import React, { Component } from 'react';
 //import "semantic-ui-css/semantic.min.css"; //{ Input, List} from
 import './App.css';
@@ -17,7 +19,7 @@ const serviceAccount = require('./chatapp-b9baf-firebase-adminsdk-g1ehd-8d46d5e0
 });
 
 
-class App extends React.Component {
+class App extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -26,6 +28,7 @@ class App extends React.Component {
       text: "",
       messages: []
   }
+
   
     }
     componentDidMount=()=>{
@@ -46,6 +49,22 @@ class App extends React.Component {
         });
         this.getMessages()
         }
+
+// submitRegistration = async (e) => {
+//           e.preventDefault();
+//           console.log("GOT HERE")
+//           console.log(this.state);
+//           try{
+//             console.log("GOT HERE, TOO")
+//             const createUser = await fetch('https://api.wit.ai/message', {
+//               method: 'GET',
+//               body: JSON.stringify(this.state),
+//               headers: {
+//                 'Authorization': 'Bearer ER74C4OF34MQCPMYJFGOQTV54DQMEFOB'
+//               }
+//               }
+//             })
+//           }
 
   onSubmit = (event) =>{
       if(event.charCode=== 13 && this.state.text.trim() !== ""){
@@ -95,9 +114,9 @@ class App extends React.Component {
           <ChatHistory />
           <SendMessage /> */}
           <h1>Welcome to Skynet Chatbot</h1>
-            <div class="chat-window">
+            <div className="chat-window">
               {/* <div class="conversation-view">{message.text}</div> */}
-              <div class="message-box">
+              <div className="message-box">
           <List>
                   {this.renderMessages()}
           </List>

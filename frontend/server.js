@@ -1,4 +1,6 @@
-require('dotenv').config({ path: 'variables.env' });
+//node server.js
+
+require('dotenv').config('./variables.env');
 
     const express = require('express');
     const bodyParser = require('body-parser');
@@ -6,7 +8,7 @@ require('dotenv').config({ path: 'variables.env' });
     const { Wit } = require('node-wit');
 
     const client = new Wit({
-      accessToken: process.env.WIT_ACCESS_TOKEN,
+      accessToken: process.env.ER74C4OF34MQCPMYJFGOQTV54DQMEFOB,
     });
 
     const app = express();
@@ -16,7 +18,13 @@ require('dotenv').config({ path: 'variables.env' });
     app.use(bodyParser.urlencoded({ extended: true }));
 
     app.post('/chat', (req, res) => {
-      const { message } = req.body;
+      const message = req.body;
+      client
+        .message(message)
+        .then(data => {
+          handleMessage(data);
+        })
+        .catch(error => console.log(error));
       //=========================
       const responses = {
         greetings: ["Hey, how's it going?", "What's good with you?"],
@@ -44,7 +52,7 @@ require('dotenv').config({ path: 'variables.env' });
       };
   
       const handleMessage = ({ entities }) => {
-        const greetings = firstEntityValue(entities, 'greetings');
+      const greetings = firstEntityValue(entities, 'greetings');
       const jokes = firstEntityValue(entities, 'getJoke');
 
       if (greetings) {
@@ -69,13 +77,9 @@ require('dotenv').config({ path: 'variables.env' });
         message: 'I can tell jokes! Say \'tell me a joke\'',
       });
       //=========================
-      client
-        .message(message)
-        .then(data => {
-          handleMessage(data);
-        })
-        .catch(error => console.log(error));
-    });
+      
+    }})
+  
 
     app.set('port', process.env.PORT || 7777);
     const server = app.listen(app.get('port'), () => {

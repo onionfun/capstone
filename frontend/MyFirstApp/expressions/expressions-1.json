@@ -1,0 +1,69 @@
+{
+    "data": [
+        {
+            "text": "Hello, how are you?",
+            "entities": []
+        },
+        {
+            "text": "how many people between Tuesday and Friday",
+            "entities": []
+        },
+        {
+            "text": "Hello",
+            "entities": [
+                {
+                    "entity": "greetings",
+                    "value": "\"true\""
+                }
+            ]
+        },
+        {
+            "text": "Hi",
+            "entities": [
+                {
+                    "entity": "greetings",
+                    "value": "\"true\""
+                }
+            ]
+        },
+        {
+            "text": "Hey",
+            "entities": [
+                {
+                    "entity": "greetings",
+                    "value": "\"true\""
+                }
+            ]
+        },
+        {
+            "text": "Good morning",
+            "entities": [
+                {
+                    "entity": "greetings",
+                    "value": "\"true\""
+                }
+            ]
+        },
+        {
+            "text": "Voicebox Karaoke",
+            "entities": []
+        },
+        {
+            "text": "90210",
+            "entities": []
+        },
+        {
+            "text": "Where is Denver?",
+            "entities": []
+        },
+        {
+            "text": "Tell me a joke",
+            "entities": [
+                {
+                    "entity": "getJoke",
+                    "value": "\"true\""
+                }
+            ]
+        }
+    ]
+}

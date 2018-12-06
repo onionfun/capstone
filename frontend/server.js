@@ -80,6 +80,8 @@ require('dotenv').config('./variables.env');
       
     }})
   
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/almostbot';
+mongoose.connect(mongoUri);
 
     app.set('port', process.env.PORT || 7777);
     const server = app.listen(app.get('port'), () => {

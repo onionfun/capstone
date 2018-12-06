@@ -21,4 +21,3 @@
 
 // const client = new Wit({accessToken});
 // interactive(client);
-// //old fetch

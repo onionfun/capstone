@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 //import "semantic-ui-css/semantic.min.css"; //{ Input, List} from
 import './App.css';
-import { TextField, List, ListItem, ListItemText } from "@material-ui/core"
+import { TextField, List } from "@material-ui/core" //ListItem, ListItemText
 import database from './firebase/firebase';
 import Pusher from 'pusher-js';
 const admin = require('firebase-admin');
@@ -96,18 +96,30 @@ class App extends Component {
         })
   }
 
-    renderMessages = () => {
-        return this.state.messages.map(message => (
-          <ListItem key={message.id}>
-            <ListItemText
-              style={{ wordBreak: "break-word" }}
-              primary={message.text}
-            />
-          </ListItem>
-        ))
-      }
+    // renderMessages = () => {
+    //     return this.state.messages.map(message => (
+    //       <ListItem key={message.id}>
+    //         <ListItemText
+    //           style={{ wordBreak: "break-word" }}
+    //           primary={message.text}
+    //         />
+    //       </ListItem>
+    //     ))
+    //   }
 
-    render=()=>{
+    render(){
+      const ChatBubble = (text, i, className) => {
+        const classes = `${className} chat-bubble`;
+        return (
+          <div key={`${className}-${i}`} class={`${className} chat-bubble`}>
+            <span class="chat-content">{text}</span>
+          </div>
+        );
+      };
+
+      const chat = this.state.messages.map((e, index) =>
+          ChatBubble(e.text, index, e.user)
+        );
       return (
         <div className="App">
           {/* <UserList />
@@ -115,10 +127,10 @@ class App extends Component {
           <SendMessage /> */}
           <h1>Welcome to Skynet Chatbot</h1>
             <div className="chat-window">
-              {/* <div class="conversation-view">{message.text}</div> */}
+              <div class="conversation-view">{chat}</div>
               <div className="message-box">
           <List>
-                  {this.renderMessages()}
+                  {/* {this.renderMessages()} */}
           </List>
     
           <TextField 
